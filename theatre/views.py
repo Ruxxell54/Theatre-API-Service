@@ -8,7 +8,13 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
-from theatre.models import Genre, Actor, TheatreHall, Play, Performance, Reservation
+from theatre.models import (Genre,
+                            Actor,
+                            TheatreHall,
+                            Play,
+                            Performance,
+                            Reservation
+                            )
 from theatre.permissions import IsAdminOrIfAuthenticatedReadOnly
 from theatre.serializers import (
     GenreSerializer,
@@ -129,8 +135,9 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         .select_related("play", "theatre_hall")
         .annotate(
             tickets_available=(
-                    F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
-                    - Count("tickets")
+                F("theatre_hall__rows")
+                * F("theatre_hall__seats_in_row")
+                - Count("tickets")
             )
         )
     )
@@ -172,7 +179,8 @@ class PerformanceViewSet(viewsets.ModelViewSet):
                 "date",
                 type=OpenApiTypes.DATE,
                 description=(
-                        "Filter by datetime of Performance" "(ex. ?date=2022-10-23)"
+                    "Filter by datetime of Performance"
+                    "(ex. ?date=2022-10-23)"
                 ),
             ),
         ]
